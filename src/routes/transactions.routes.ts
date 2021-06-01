@@ -70,22 +70,9 @@ transactionsRouter.post(
       'import_template.csv',
     );
 
-    const importedTransactions = await importService.execute(directory);
-    const vTransactions: Transaction[] = [];
+    const newImportedTransactions = await importService.execute(directory);
 
-    importedTransactions.forEach(async transaction => {
-      const createTransactionService2 = new CreateTransactionService();
-
-      try {
-        vTransactions.push(
-          await createTransactionService2.execute(transaction),
-        );
-      } catch (err) {
-        console.log(err);
-      }
-    });
-    // console.log(vTransactions);
-    return response.json(vTransactions);
+    return response.json(newImportedTransactions);
   },
 );
 

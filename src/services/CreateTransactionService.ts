@@ -46,17 +46,21 @@ class CreateTransactionService {
     const findCategory = await categoryCustomRepository.findByTitle(category);
 
     if (!findCategory) {
-      const newCategory = categoryRepository.create({ title: category });
-      await categoryRepository.save(newCategory);
-      transaction.category_id = newCategory.id;
-      // console.log('new category has created');
+      try {
+        const newCategory = categoryRepository.create({ title: category });
+        await categoryRepository.save(newCategory);
+        transaction.category_id = newCategory.id;
+        // console.log('new category has created');
+      } catch {
+        throw new AppError('Error Categotegory', 500);
+      }
     } else {
       const { id } = findCategory;
       transaction.category_id = id;
     }
 
     await transactionRepository.save(transaction);
-
+    // console.log('new transaction created');
     return transaction;
   }
 }
